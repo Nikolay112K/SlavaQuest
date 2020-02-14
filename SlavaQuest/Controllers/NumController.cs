@@ -26,14 +26,15 @@ namespace SlavaQuest.Controllers
         public ActionResult<IEnumerable<Student>> GetStudents()
         {
             return Ok(MyStudents);
+
         }
 
         [HttpGet("get/one")]
         public ActionResult<Student> GetStudent(Guid id)
         {
-
             var student = MyStudents.Find(s => s.Id == id);
             return Ok(student);
+
         }
 
         [HttpPost("post")]
@@ -48,6 +49,7 @@ namespace SlavaQuest.Controllers
             MyStudents.Add(student);
 
             return Ok();
+
         }
 
         [HttpPut("put")]
@@ -71,6 +73,7 @@ namespace SlavaQuest.Controllers
             }
 
             return Ok(student);
+
         }
 
         [HttpDelete("delete/all")]
@@ -79,15 +82,22 @@ namespace SlavaQuest.Controllers
             MyStudents = null;
 
             return Ok();
+
         }
 
         [HttpDelete("delete/one")]
         public ActionResult RemoveStudent(Guid id)
         {
             var student = MyStudents.Find(s=>s.Id == id);
+            if(student == null)
+            {
+                NotFound("What i need to delete? Information is empty");
+            }
             MyStudents.Remove(student);
 
             return Ok();
+
         }
     }
 }
+ 
