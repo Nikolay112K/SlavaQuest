@@ -22,13 +22,21 @@ namespace SlavaQuest.Controllers
             };
         }
 
-        [HttpGet("GET")]
+        [HttpGet("get/all")]
         public ActionResult<IEnumerable<Student>> GetStudents()
         {
             return Ok(MyStudents);
         }
 
-        [HttpPost("POST")]
+        [HttpGet("get/one")]
+        public ActionResult<Student> GetStudent(Guid id)
+        {
+
+            var student = MyStudents.Find(s => s.Id == id);
+            return Ok(student);
+        }
+
+        [HttpPost("post")]
         public ActionResult CreateStudent([FromQuery]Student student)
         {
             if (student != null)
@@ -42,7 +50,7 @@ namespace SlavaQuest.Controllers
             return Ok();
         }
 
-        [HttpPut("PUT")]
+        [HttpPut("put")]
         public ActionResult<Student> UpdateStudent(Guid id, byte age = 0, string name = "")
         {
             if (age == 0 && name == "")
