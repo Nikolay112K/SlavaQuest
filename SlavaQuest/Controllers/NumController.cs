@@ -26,30 +26,49 @@ namespace SlavaQuest.Controllers
         public ActionResult<IEnumerable<Student>> GetStudents()
         {
             return Ok(MyStudents);
-
         }
 
         [HttpGet("get/one")]
         public ActionResult<Student> GetStudent(Guid id)
         {
             var student = MyStudents.Find(s => s.Id == id);
-            return Ok(student);
 
+            if (student == null)
+            {
+                return NotFound("I can't find, information is empty");
+            }
+
+            return Ok(student);
         }
 
         [HttpPost("post")]
         public ActionResult CreateStudent([FromQuery]Student student)
         {
-            if (student != null)
+            student.Id = Guid.NewGuid();
+
+            if (string.IsNullOrEmpty(student.Name))
             {
-                return BadRequest("invalid data");
+                return BadRequest("Information is empty");
             }
 
-            student.Id = Guid.NewGuid();
+            if (student != null)
+            {
+                return BadRequest("Invalid data");
+            }
+
+            if (student.Age < 15)
+            {
+                return BadRequest("He/she too young for been a student");
+            }
+
+            if (student.Age > 65)
+            {
+                return BadRequest("He/she too old for been a student");
+            }
+
             MyStudents.Add(student);
 
             return Ok();
-
         }
 
         [HttpPut("put")]
@@ -57,7 +76,7 @@ namespace SlavaQuest.Controllers
         {
             if (age == 0 && name == "")
             {
-                return BadRequest("nothing to update");
+                return BadRequest("Nothing to update");
             }
 
             var student = MyStudents.Find(s => s.Id == id);
@@ -73,7 +92,6 @@ namespace SlavaQuest.Controllers
             }
 
             return Ok(student);
-
         }
 
         [HttpDelete("delete/all")]
@@ -82,22 +100,20 @@ namespace SlavaQuest.Controllers
             MyStudents = null;
 
             return Ok();
-
         }
 
         [HttpDelete("delete/one")]
         public ActionResult RemoveStudent(Guid id)
         {
-            var student = MyStudents.Find(s=>s.Id == id);
-            if(student == null)
+            var student = MyStudents.Find(s => s.Id == id);
+
+            if (student == null)
             {
-                NotFound("What i need to delete? Information is empty");
+                return NotFound("What i need to delete? Information is empty");
             }
             MyStudents.Remove(student);
 
             return Ok();
-
         }
     }
 }
- 
