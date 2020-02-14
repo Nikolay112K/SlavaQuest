@@ -44,11 +44,9 @@ namespace SlavaQuest.Controllers
         [HttpPost("post")]
         public ActionResult CreateStudent([FromQuery]Student student)
         {
-            student.Id = Guid.NewGuid();
-
             if (string.IsNullOrEmpty(student.Name))
             {
-                return BadRequest("Information is empty");
+                return BadRequest("Student name is empty");
             }
 
             if (student.Age < 15 && student.Age > 65)
@@ -56,6 +54,7 @@ namespace SlavaQuest.Controllers
                 return BadRequest("Incorrect age");
             }
 
+            student.Id = Guid.NewGuid();
             MyStudents.Add(student);
 
             return Ok();
@@ -73,7 +72,7 @@ namespace SlavaQuest.Controllers
 
             if(student == null)
             {
-                NotFound("Information is empty");
+                NotFound("Student is not found");
             }
 
             if (age != 0)
