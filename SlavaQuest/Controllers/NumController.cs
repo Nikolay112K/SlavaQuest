@@ -12,58 +12,72 @@ namespace SlavaQuest.Controllers
     [Route("[controller]")]
     public class NumController : ControllerBase
     {
-        Student MyStudent = null;
+        List<Student> MyStudents = null;
 
         public NumController()
         {
-            //MyStudent = new Student(Guid.NewGuid(),1,"nick");
+
+            MyStudents = new List<Student>
+            {
+                new Student { Id = Guid.NewGuid(), Age = 17, Name = "Frank" },
+                new Student { Id = Guid.NewGuid(), Age = 16, Name = "Thomas" }
+            };
         }
 
-        [HttpGet("G")]
-        public ActionResult<string> GetString()
+        [HttpGet("GET")]
+        public ActionResult<IEnumerable<Student>> GetStudents()
         {
-            return Ok(MyStudent);
+            return Ok(MyStudents);
         }
 
-        [HttpPost("PO")]
-        public ActionResult CreateString([FromQuery]Student student)
+        [HttpPost("POST")]
+        public ActionResult CreateStudent([FromQuery]Student student)
         {
             if (student != null)
             {
                 return BadRequest("invalid data");
             }
 
-            MyStudent = student;
-            MyStudent.Id = Guid.NewGuid();
+            student.Id = Guid.NewGuid();
+            MyStudents.Add(student);
 
             return Ok();
         }
         
-        [HttpPut("PU")]
-        public ActionResult<string> UpdateString(byte age = 0, string name = "")
+        [HttpPut("PUT")]
+        public ActionResult<string> UpdateStudent(byte age = 0, string name = "")
         {
-            if (age != 0)
-            {
-                MyStudent.Age = age;
-            }
+            //if (age != 0)
+            //{
+            //    MyStudents.Age = age;
+            //}
 
-            if (name != "")
-            {
-                MyStudent.Name = name;
-            }
+            //if (name != "")
+            //{
+            //    MyStudents.Name = name;
+            //}
 
             if (age == 0 && name == "")
             {
                 return BadRequest("nothing to update");
             }
 
-            return Ok(MyStudent);
+            return Ok(MyStudents);
         }
 
-        [HttpDelete("D")]
-        public ActionResult RemoveString()
+        [HttpDelete("delete/all")]
+        public ActionResult RemoveAllStudens()
         {
-            MyStudent = null;
+            MyStudents = null;
+
+            return Ok();
+        }
+
+        [HttpDelete("delete/one")]
+        public ActionResult RemoveStudent(Guid id)
+        {
+            var student = MyStudents.Find(s=>s.Id == id);
+            MyStudents.Remove(student);
 
             return Ok();
         }
