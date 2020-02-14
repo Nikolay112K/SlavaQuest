@@ -13,14 +13,12 @@ namespace SlavaQuest.Controllers
     public class NumController : ControllerBase
     {
         List<Student> MyStudents = null;
-
         public NumController()
         {
-
             MyStudents = new List<Student>
             {
-                new Student { Id = Guid.NewGuid(), Age = 17, Name = "Frank" },
-                new Student { Id = Guid.NewGuid(), Age = 16, Name = "Thomas" }
+                new Student { Id = new Guid("A5DAEDB1-0E26-4EBC-9C95-EE070F33BE93"), Age = 17, Name = "Frank" },
+                new Student { Id = new Guid("A9E7FC33-7182-4F31-92C7-A8C835B4516A"), Age = 16, Name = "Thomas" }
             };
         }
 
@@ -43,26 +41,28 @@ namespace SlavaQuest.Controllers
 
             return Ok();
         }
-        
+
         [HttpPut("PUT")]
-        public ActionResult<string> UpdateStudent(byte age = 0, string name = "")
+        public ActionResult<Student> UpdateStudent(Guid id, byte age = 0, string name = "")
         {
-            //if (age != 0)
-            //{
-            //    MyStudents.Age = age;
-            //}
-
-            //if (name != "")
-            //{
-            //    MyStudents.Name = name;
-            //}
-
             if (age == 0 && name == "")
             {
                 return BadRequest("nothing to update");
             }
 
-            return Ok(MyStudents);
+            var student = MyStudents.Find(s => s.Id == id);
+
+            if (age != 0)
+            {
+                student.Age = age;
+            }
+
+            if (name != "")
+            {
+                student.Name = name;
+            }
+
+            return Ok(student);
         }
 
         [HttpDelete("delete/all")]
