@@ -51,19 +51,9 @@ namespace SlavaQuest.Controllers
                 return BadRequest("Information is empty");
             }
 
-            if (student != null)
+            if (student.Age < 15 && student.Age > 65)
             {
-                return BadRequest("Invalid data");
-            }
-
-            if (student.Age < 15)
-            {
-                return BadRequest("He/she too young for been a student");
-            }
-
-            if (student.Age > 65)
-            {
-                return BadRequest("He/she too old for been a student");
+                return BadRequest("Incorrect age");
             }
 
             MyStudents.Add(student);
@@ -80,6 +70,11 @@ namespace SlavaQuest.Controllers
             }
 
             var student = MyStudents.Find(s => s.Id == id);
+
+            if(student == null)
+            {
+                NotFound("Information is empty");
+            }
 
             if (age != 0)
             {
