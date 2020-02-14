@@ -31,14 +31,7 @@ namespace SlavaQuest.Controllers
         [HttpGet("get/one")]
         public ActionResult<Student> GetStudent(Guid id)
         {
-            var student = MyStudents.Find(s => s.Id == id);
-
-            if (student == null)
-            {
-                return NotFound("I can't find, information is empty");
-            }
-
-            return Ok(student);
+            return Ok(ValidateStudentId(id));
         }
 
         [HttpPost("post")]
@@ -47,6 +40,11 @@ namespace SlavaQuest.Controllers
             if (string.IsNullOrEmpty(student.Name))
             {
                 return BadRequest("Student name is empty");
+            }
+
+            if (student.Name.Length > 15)
+            {
+                throw new Exception("Length of name bigger then 15 symbol's");
             }
 
             if (student.Age < 15 && student.Age > 65)
@@ -99,15 +97,21 @@ namespace SlavaQuest.Controllers
         [HttpDelete("delete/one")]
         public ActionResult RemoveStudent(Guid id)
         {
+            MyStudents.Remove(ValidateStudentId(id));
+
+            return Ok();
+        }
+
+        private Student ValidateStudentId(Guid id)
+        {
             var student = MyStudents.Find(s => s.Id == id);
 
             if (student == null)
             {
-                return NotFound("What i need to delete? Information is empty");
+                throw new Exception($"Student with current id: {id} not found");
             }
-            MyStudents.Remove(student);
 
-            return Ok();
+            return student;
         }
     }
 }
