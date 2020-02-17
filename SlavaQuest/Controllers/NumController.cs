@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.AspNetCore.Mvc;
 using SlavaQuest.Models;
+using SlavaQuest.Services.Interfaces;
+using System;
+using System.Collections.Generic;
 
 namespace SlavaQuest.Controllers
 {
@@ -12,48 +10,28 @@ namespace SlavaQuest.Controllers
     [Route("[controller]")]
     public class NumController : ControllerBase
     {
-        List<Student> MyStudents = null;
-        public NumController()
+        private readonly IStudenService _studentService;
+        public NumController(IStudenService studenService)
         {
-            MyStudents = new List<Student>
-            {
-                new Student { Id = new Guid("A5DAEDB1-0E26-4EBC-9C95-EE070F33BE93"), Age = 17, Name = "Frank" },
-                new Student { Id = new Guid("A9E7FC33-7182-4F31-92C7-A8C835B4516A"), Age = 16, Name = "Thomas" }
-            };
+            _studentService = studenService;
         }
 
         [HttpGet("get/all")]
         public ActionResult<IEnumerable<Student>> GetStudents()
         {
-            return Ok(MyStudents);
+            return Ok(_studentService.GetStudents());
         }
 
         [HttpGet("get/one")]
         public ActionResult<Student> GetStudent(Guid id)
         {
-            return Ok(ValidateStudentId(id));
+            return Ok(_studentService.GetStudent(id));
         }
 
         [HttpPost("post")]
         public ActionResult CreateStudent([FromQuery]Student student)
         {
-            if (string.IsNullOrEmpty(student.Name))
-            {
-                return BadRequest("Student name is empty");
-            }
-
-            if (student.Name.Length > 15)
-            {
-                throw new Exception("Length of name bigger then 15 symbol's");
-            }
-
-            if (student.Age < 15 && student.Age > 65)
-            {
-                return BadRequest("Incorrect age");
-            }
-
-            student.Id = Guid.NewGuid();
-            MyStudents.Add(student);
+            _studentService.AddStudent(student);
 
             return Ok();
         }
@@ -66,30 +44,15 @@ namespace SlavaQuest.Controllers
                 return BadRequest("Nothing to update");
             }
 
-            var student = MyStudents.Find(s => s.Id == id);
+            Student result = _studentService.UpdateStudent(id, age, name);
 
-            if(student == null)
-            {
-                NotFound("Student is not found");
-            }
-
-            if (age != 0)
-            {
-                student.Age = age;
-            }
-
-            if (name != "")
-            {
-                student.Name = name;
-            }
-
-            return Ok(student);
+            return Ok(result);
         }
 
         [HttpDelete("delete/all")]
         public ActionResult RemoveAllStudens()
         {
-            MyStudents = null;
+            _studentService.DeleteAllStudents();
 
             return Ok();
         }
@@ -97,21 +60,9 @@ namespace SlavaQuest.Controllers
         [HttpDelete("delete/one")]
         public ActionResult RemoveStudent(Guid id)
         {
-            MyStudents.Remove(ValidateStudentId(id));
+            _studentService.DeleteStudent(id);
 
             return Ok();
-        }
-
-        private Student ValidateStudentId(Guid id)
-        {
-            var student = MyStudents.Find(s => s.Id == id);
-
-            if (student == null)
-            {
-                throw new Exception($"Student with current id: {id} not found");
-            }
-
-            return student;
         }
     }
 }

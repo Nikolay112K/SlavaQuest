@@ -1,15 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using SlavaQuest.Db;
+using SlavaQuest.Services.Implementations;
+using SlavaQuest.Services.Interfaces;
 
 namespace SlavaQuest
 {
@@ -26,6 +22,9 @@ namespace SlavaQuest
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            services.AddTransient<IStudenService, StudentService>();
+            services.AddTransient<IFakeDbService, FakeDbService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
