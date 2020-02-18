@@ -23,8 +23,8 @@ namespace SlavaQuest
         {
             services.AddControllers();
 
-            services.AddTransient<IStudenService, StudentService>();
-            services.AddTransient<IFakeDbService, FakeDbService>();
+            services.AddTransient<ITenantsService, TenantsService>();
+            services.AddTransient<IDb, Db.Db>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
