@@ -31,7 +31,7 @@ namespace SlavaQuest.Services.Implementations
             }
 
             tenants.Id = Guid.NewGuid();
-            _tenantsRepository.GetTenantDb().Add(tenants);
+            _tenantsRepository.GetTenantsDb().Add(tenants);
         }
 
         public void DeleteAllTenants()
@@ -41,7 +41,7 @@ namespace SlavaQuest.Services.Implementations
 
         public void DeleteTenant(Guid id)
         {
-            _tenantsRepository.GetTenantDb().Remove(ValidateTenantId(id));
+            _tenantsRepository.GetTenantsDb().Remove(ValidateTenantId(id));
         }
 
         public Tenant GetTenant(Guid id)
@@ -52,35 +52,40 @@ namespace SlavaQuest.Services.Implementations
         }
         public IEnumerable<Tenant> GetTenants()
         {
-            return _tenantsRepository.GetTenantDb();
+            return _tenantsRepository.GetTenantsDb();
         }
 
         public Tenant UpdateTenant(Guid id, byte age, string name, short numApartment)
         {
-            Tenant tenants = _tenantsRepository.GetTenantDb().Find(s => s.Id == id);
+            Tenant tenant = _tenantsRepository.GetTenantsDb().Find(s => s.Id == id);
 
-            if (tenants == null)
+            if (tenant == null)
             {
                 throw new Exception("Tenant is not found");
             }
 
             if (age != 0)
             {
-                tenants.Age = age;
+                tenant.Age = age;
             }
 
             if (name != "")
             {
-                tenants.Name = name;
+                tenant.Name = name;
             }
 
-            return tenants;
+            if(numApartment != 0)
+            {
+                tenant.NumApartment = numApartment;
+            }
+
+            return tenant;
         }
 
         
         private Tenant ValidateTenantId(Guid id)
         {
-            Tenant tenants = _tenantsRepository.GetTenantDb().Find(s => s.Id == id);
+            Tenant tenants = _tenantsRepository.GetTenantsDb().Find(s => s.Id == id);
 
             if (tenants == null)
             {

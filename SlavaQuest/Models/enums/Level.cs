@@ -4,6 +4,7 @@
 	{
 		Total = 100,
 		Part = 50,
-		Light = 10
+		Light = 10,
+		None = 0
 	}
 }

@@ -24,6 +24,8 @@ namespace SlavaQuest
             services.AddControllers();
 
             services.AddTransient<ITenantsService, TenantsService>();
+            services.AddTransient<IDutyService, DutyService>();
+
             services.AddTransient<IDb, Db.Db>();
         }
 

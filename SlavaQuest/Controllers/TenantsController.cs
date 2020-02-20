@@ -41,7 +41,7 @@ namespace SlavaQuest.Controllers
         [HttpPut("put")]
         public ActionResult<Tenant> UpdateTenant(Guid id, short numApartment, byte age = 0, string name = "")
         {
-            if (age == 0 && name == "")
+            if (age == 0 && name == "" && numApartment == 0)
             {
                 return BadRequest("Nothing to update");
             }

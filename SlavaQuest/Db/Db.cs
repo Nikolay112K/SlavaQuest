@@ -27,10 +27,10 @@ namespace SlavaQuest.Db
 
             DutyTenant = new List<Duty>
             {
-                new Duty { Id = Guid.NewGuid(), TenantId = id0, IsActive = false, Level = Level.Light },
-                new Duty { Id = Guid.NewGuid(), TenantId = id1, IsActive = false, Level = Level.Light },
-                new Duty { Id = Guid.NewGuid(), TenantId = id2, IsActive = false, Level = Level.Light },
-                new Duty { Id = Guid.NewGuid(), TenantId = id3, IsActive = false, Level = Level.Light }
+                new Duty { Id = Guid.NewGuid(), TenantId = id0, IsActive = false, Level = Level.None },
+                new Duty { Id = Guid.NewGuid(), TenantId = id1, IsActive = false, Level = Level.None },
+                new Duty { Id = Guid.NewGuid(), TenantId = id2, IsActive = false, Level = Level.None },
+                new Duty { Id = Guid.NewGuid(), TenantId = id3, IsActive = false, Level = Level.None }
             };
         }
 
@@ -39,7 +39,7 @@ namespace SlavaQuest.Db
             return DutyTenant;
         }
 
-        public List<Tenant> GetTenantDb()
+        public List<Tenant> GetTenantsDb()
         {
             return MyTenants;
         }
@@ -47,7 +47,7 @@ namespace SlavaQuest.Db
 
     public interface IDb
     {
-        List<Tenant> GetTenantDb();
+        List<Tenant> GetTenantsDb();
         List<Duty> GetDutyDb();
     }
 }
