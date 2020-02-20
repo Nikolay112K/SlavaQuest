@@ -8,10 +8,10 @@ namespace SlavaQuest.Services.Implementations
 {
     public class TenantsService : ITenantsService
     {
-        private IDb _tenantsRepository = null;
+        private IDb _repository = null;
         public TenantsService(IDb tenantsRepository)
         {
-            _tenantsRepository = tenantsRepository;
+            _repository = tenantsRepository;
         }
         public void AddTenant(Tenant tenants)
         {
@@ -31,17 +31,27 @@ namespace SlavaQuest.Services.Implementations
             }
 
             tenants.Id = Guid.NewGuid();
-            _tenantsRepository.GetTenantsDb().Add(tenants);
+            _repository.GetTenantsDb().Add(tenants);
         }
 
         public void DeleteAllTenants()
         {
-            _tenantsRepository = null;
+            _repository.GetTenantsDb().Clear();
+            _repository.GetDutyDb().Clear();
         }
 
         public void DeleteTenant(Guid id)
         {
-            _tenantsRepository.GetTenantsDb().Remove(ValidateTenantId(id));
+            var tentn = ValidateTenantId(id);
+
+            var duty = _repository.GetDutyDb().Find(s => s.TenantId == tentn.Id);
+
+            if (duty != null)
+            {
+                _repository.GetDutyDb().Remove(duty);
+            }
+
+            _repository.GetTenantsDb().Remove(tentn);
         }
 
         public Tenant GetTenant(Guid id)
@@ -52,12 +62,12 @@ namespace SlavaQuest.Services.Implementations
         }
         public IEnumerable<Tenant> GetTenants()
         {
-            return _tenantsRepository.GetTenantsDb();
+            return _repository.GetTenantsDb();
         }
 
         public Tenant UpdateTenant(Guid id, byte age, string name, short numApartment)
         {
-            Tenant tenant = _tenantsRepository.GetTenantsDb().Find(s => s.Id == id);
+            Tenant tenant = _repository.GetTenantsDb().Find(s => s.Id == id);
 
             if (tenant == null)
             {
@@ -85,7 +95,7 @@ namespace SlavaQuest.Services.Implementations
         
         private Tenant ValidateTenantId(Guid id)
         {
-            Tenant tenants = _tenantsRepository.GetTenantsDb().Find(s => s.Id == id);
+            Tenant tenants = _repository.GetTenantsDb().Find(s => s.Id == id);
 
             if (tenants == null)
             {
