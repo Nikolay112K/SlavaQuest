@@ -15,7 +15,6 @@ namespace SlavaQuest.Db
             Guid id1 = Guid.NewGuid();
             Guid id2 = Guid.NewGuid();
             Guid id3 = Guid.NewGuid();
-
             MyTenants = new List<Tenant>
             {
                 new Tenant {Id = id0, Age = 53, Name = "George", Gender = "Male", NumApartment = 1},

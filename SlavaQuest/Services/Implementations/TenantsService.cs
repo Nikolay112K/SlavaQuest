@@ -1,8 +1,10 @@
-﻿using SlavaQuest.Db;
+﻿using Microsoft.EntityFrameworkCore;
+using SlavaQuest.Db;
 using SlavaQuest.Models;
 using SlavaQuest.Services.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 
 namespace SlavaQuest.Services.Implementations
 {
@@ -13,25 +15,31 @@ namespace SlavaQuest.Services.Implementations
         {
             _repository = tenantsRepository;
         }
-        public void AddTenant(Tenant tenants)
+        public void AddTenant(Tenant tenant)
         {
-            if (string.IsNullOrEmpty(tenants.Name))
+            if (string.IsNullOrEmpty(tenant.Name))
             {
                 throw new Exception("Tenants name is empty");
             }
 
-            if (tenants.Name.Length > 15)
+            if (tenant.Name.Length > 15)
             {
                 throw new Exception("Length of name bigger then 15 symbol's");
             }
 
-            if (tenants.Age < 15 && tenants.Age > 65)
+            if (tenant.Age < 15 && tenant.Age > 65)
             {
                 throw new Exception("Incorrect age");
             }
 
-            tenants.Id = Guid.NewGuid();
-            _repository.GetTenantsDb().Add(tenants);
+            tenant.Id = Guid.NewGuid();
+
+            ApplicationContext db = new ApplicationContext();
+
+            db.Tenants.Add(tenant);
+            db.SaveChanges();
+            db.Dispose();
+            //_repository.GetTenantsDb().Add(tenants);
         }
 
         public void DeleteAllTenants()

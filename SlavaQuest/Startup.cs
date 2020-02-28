@@ -6,6 +6,7 @@ using Microsoft.Extensions.Hosting;
 using SlavaQuest.Db;
 using SlavaQuest.Services.Implementations;
 using SlavaQuest.Services.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace SlavaQuest
 {
